@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>青椒进化论 · 游戏说明书与数值公式</title>
+<style>
+  :root{
+    --paper:#f3ede0; --card:#fbf8f1; --ink:#2b2620; --sub:#6f6557;
+    --seal:#9e2b25; --seal-d:#7c211d; --gold:#b08d3e; --line:#d9cfbb;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);
+    font-family:"Noto Serif SC","Songti SC","SimSun",Georgia,serif;line-height:1.7;
+    -webkit-font-smoothing:antialiased}
+  .wrap{max-width:980px;margin:0 auto;padding:0 22px 80px}
+  header.hero{text-align:center;padding:64px 20px 40px;border-bottom:2px double var(--line)}
+  .stamp{display:inline-block;border:3px solid var(--seal);color:var(--seal);
+    font-weight:900;padding:6px 14px;letter-spacing:6px;border-radius:6px;
+    transform:rotate(-4deg);font-size:22px;margin-bottom:18px}
+  h1{font-size:40px;margin:8px 0 6px;letter-spacing:4px}
+  .hero p{color:var(--sub);margin:4px}
+  h2{font-size:26px;margin:52px 0 8px;padding-left:14px;border-left:6px solid var(--seal);
+    letter-spacing:2px}
+  h2 .en{font-size:14px;color:var(--sub);font-weight:400;letter-spacing:1px}
+  h3{font-size:19px;margin:28px 0 8px;color:var(--seal-d)}
+  p.lead{color:var(--sub);margin:6px 0 16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:18px 20px;margin:14px 0;box-shadow:0 1px 0 rgba(0,0,0,.03)}
+  table{width:100%;border-collapse:collapse;margin:10px 0;font-size:14.5px}
+  th,td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+  th{background:#efe7d6;font-weight:700;letter-spacing:1px}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+  tr:last-child td{border-bottom:none}
+  .tag{display:inline-block;background:var(--seal);color:#fff;font-size:12px;
+    padding:1px 8px;border-radius:20px;margin-right:4px}
+  .tag.gold{background:var(--gold)}
+  .tag.gray{background:#8a8175}
+  code,.mono{font-family:"SF Mono",Menlo,Consolas,monospace;font-size:13.5px;
+    background:#ece3d2;padding:1px 6px;border-radius:5px;color:var(--seal-d)}
+  .formula{background:#2b2620;color:#f0e8d8;border-radius:10px;padding:14px 18px;
+    font-family:"SF Mono",Menlo,monospace;font-size:13.5px;overflow-x:auto;margin:12px 0;line-height:1.9}
+  .formula b{color:#e8b04a}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .pill{display:inline-block;border:1px solid var(--line);border-radius:8px;padding:2px 10px;
+    font-size:13px;margin:2px;background:#fff}
+  ul.tight{margin:8px 0;padding-left:22px}
+  ul.tight li{margin:3px 0}
+  .note{border-left:4px solid var(--gold);background:#faf3e2;padding:10px 16px;border-radius:0 8px 8px 0;
+    color:#6b5520;font-size:14px;margin:12px 0}
+  .toc{columns:2;column-gap:40px;font-size:15px}
+  .toc a{color:var(--seal-d);text-decoration:none}
+  .toc a:hover{text-decoration:underline}
+  footer{text-align:center;color:var(--sub);font-size:13px;margin-top:60px;
+    border-top:1px solid var(--line);padding-top:20px}
+  @media(max-width:640px){.grid2{grid-template-columns:1fr}.toc{columns:1}h1{font-size:30px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <div class="stamp">青椒进化论</div>
+  <h1>游戏说明书 · 数值与概率公式</h1>
+  <p>Faculty Evolution — Official Game Manual</p>
+  <p>从专业技术岗 10 级到 1 级，再到院士：一位高校教师的聘期生存模拟</p>
+</header>
+
+<div class="card">
+  <h3 style="margin-top:0">目录</h3>
+  <div class="toc">
+    <a href="#goal">1. 游戏目标与四种结局</a><br>
+    <a href="#loop">2. 核心循环：时间与健康</a><br>
+    <a href="#rank">3. 职称与 10 级岗位</a><br>
+    <a href="#kpi">4. 四大类任务与考核聚合</a><br>
+    <a href="#paper">5. 期刊 8 档与成功率</a><br>
+    <a href="#vfund">6. 纵向基金 6 档</a><br>
+    <a href="#talent">7. 人才项目 3 档</a><br>
+    <a href="#horizontal">8. 横向经费与工作量</a><br>
+    <a href="#student">9. 研究生与论文产出</a><br>
+    <a href="#buff">10. 加成公式总览</a><br>
+    <a href="#item">11. 道具商店</a><br>
+    <a href="#position">12. 行政职务与团队</a><br>
+    <a href="#misc">13. 进修 / 教材 / 教改 / 专利</a><br>
+    <a href="#origin">14. 院校与出身随机</a><br>
+    <a href="#acad">15. 院士评定公式</a><br>
+  </div>
+</div>
+
+<!-- 1 目标 -->
+<h2 id="goal">1 · 游戏目标与四种结局 <span class="en">Goals & Endings</span></h2>
+<p class="lead">你将在每一年年末接受聘期考核，在有限时间内平衡教学、科研、社会服务与行政。游戏有四种结局：</p>
+<table>
+  <tr><th>结局</th><th>触发条件</th><th>性质</th></tr>
+  <tr><td><span class="tag">院士</span>当选院士</td><td>一级教授满 3 年后申请，按院士竞争力概率成功</td><td>最高胜利</td></tr>
+  <tr><td><span class="tag gold">荣退</span>光荣退休</td><td>活到 65 岁，以一级教授身份退休（retire_top）</td><td>高级胜利</td></tr>
+  <tr><td><span class="tag gold">退休</span>普通退休</td><td>活到 65 岁正常退休</td><td>通关（维持现状）</td></tr>
+  <tr><td><span class="tag gray">解聘</span>不再续聘</td><td>连续 3 年考核不通过，或横向违约赔不起</td><td>失败</td></tr>
+  <tr><td><span class="tag gray">死亡</span>健康归零</td><td>健康度降到 0（过度加班、恢复不足）</td><td>失败</td></tr>
+</table>
+<div class="note">所有岗位都要考核，包括一级教授。一年考核不通过会<b>降级</b>，连续三年不通过则<b>解聘</b>。</div>
+
+<!-- 2 循环 -->
+<h2 id="loop">2 · 核心循环：时间与健康 <span class="en">Time & Health</span></h2>
+<div class="grid2">
+  <div class="card">
+    <h3 style="margin-top:0">时间单位</h3>
+    <ul class="tight">
+      <li>每 <b>3 个月为一个季度</b>，一年 4 个季度，<b>每年考核一次</b>。</li>
+      <li>每投入 <b>1 块 = 10 小时</b>（所有任务统一以 10 小时为单位）。</li>
+      <li>每月健康工时随年龄递减（见下表）。</li>
+      <li>正常工时之外，每月最多再加班 <b>100 小时</b>（用健康换）。</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3 style="margin-top:0">健康规则</h3>
+    <ul class="tight">
+      <li>每加班 1 块（10 小时）扣 <b>5%</b> 健康。</li>
+      <li>体育锻炼每块（10 小时）恢复 <b>2.5%</b> 健康。</li>
+      <li>行政事务未完成：每项每季扣健康 6%、教学评价与社会服务各扣。</li>
+      <li>健康 &lt; 30 时，所有产出效率 ×0.7。</li>
+      <li>健康归零即游戏结束（因公殉职）。</li>
+    </ul>
+  </div>
+</div>
+<h3>各年龄段每月可用工时</h3>
+<table>
+  <tr><th>年龄段</th><th class="num">每月健康工时</th><th class="num">季度（×3）</th><th>考核 KPI 折减</th></tr>
+  <tr><td>35 岁前</td><td class="num">120 小时</td><td class="num">360 小时 / 36 块</td><td>100%</td></tr>
+  <tr><td>35–45 岁</td><td class="num">100 小时</td><td class="num">300 小时 / 30 块</td><td>100%</td></tr>
+  <tr><td>45–55 岁</td><td class="num">80 小时</td><td class="num">240 小时 / 24 块</td><td>85%（45 岁起）</td></tr>
+  <tr><td>55–65 岁</td><td class="num">60 小时</td><td class="num">180 小时 / 18 块</td><td>66%（55 岁）/ 55%（60 岁）</td></tr>
+</table>
+
+<!-- 3 职称 -->
+<h2 id="rank">3 · 职称与 10 级岗位 <span class="en">Ranks & Levels</span></h2>
+<p class="lead">专业技术岗共 10 级，数字越小级别越高。职称按岗位段映射：</p>
+<table>
+  <tr><th>岗位级别</th><th>职称</th><th>职称英文</th></tr>
+  <tr><td>10 / 9 / 8 级</td><td>讲师</td><td>Lecturer</td></tr>
+  <tr><td>7 / 6 / 5 级</td><td>副教授</td><td>Associate Professor</td></tr>
+  <tr><td>4 / 3 / 2 / 1 级</td><td>教授</td><td>Professor</td></tr>
+</table>
+<h3>工资体系</h3>
+<ul class="tight">
+  <li>以 <b>7 级普通学校月固定工资 10,000 元</b>为基准，岗位每升/降一级 ±1,000 元。</li>
+  <li>院校工资系数：从中专 0.2 到世界顶级 1.8（见第 14 节）。</li>
+  <li>绩效年末发放：<code>绩效 = 月工资 × 12 × 20% × 年度平均完成度（0–1）</code>。</li>
+  <li>项目经费与个人钱包<b>分开计算</b>；个人可支配额度 = 到手工资 ÷ 2。</li>
+</ul>
+
+<!-- 4 KPI -->
+<h2 id="kpi">4 · 四大类任务与考核聚合 <span class="en">Four KPI Categories</span></h2>
+<p class="lead">所有任务归入四大类。考核不要求每一项都达标，而是<b>每一类内部取平均完成度</b>（类内可互补，例如论文多可补基金少），再要求四大类各自达标。</p>
+<table>
+  <tr><th>大类</th><th>包含指标</th></tr>
+  <tr><td><b>科研</b> Research</td><td>论文积分、SCI、一区、横向经费、纵向项目、重大项目</td></tr>
+  <tr><td><b>教学</b> Teaching</td><td>课时、教学评价、育人分、学科竞赛、教学竞赛、教材、教改</td></tr>
+  <tr><td><b>社会服务</b> Service</td><td>社会服务积分</td></tr>
+  <tr><td><b>行政</b> Admin</td><td>行政事务（无固定量化指标，按完成情况）</td></tr>
+</table>
+<div class="formula">
+<b>类内完成度</b> = 该类各项 (当年完成 / 当年要求) 的平均值<br>
+<b>yearMinRatio</b> = 四大类完成度的最小值　<b>yearAvgRatio</b> = 四大类完成度的平均值<br>
+· MinRatio ≥ 1　→ 考核通过（四大类平均都达标）<br>
+· AvgRatio ≥ 2.0 且 random &lt; 0.60　→ <b>60% 概率晋升</b>（不是 100%）<br>
+· MinRatio &lt; 1　→ 不通过：failStreak +1，降级；连续 3 年解聘
+</div>
+<div class="note">职称越高，课时 KPI 越低：讲师 400 学时 / 副教授 350 / 教授 300。学校越差，课时要求越低；学校越好，科研压力越大。</div>
+
+<!-- 5 期刊 -->
+<h2 id="paper">5 · 期刊 8 档与成功率 <span class="en">Journal Tiers</span></h2>
+<p class="lead">论文写作时间全年累计，年末统一结算：<b>每满 80 小时必产 1 篇</b>（100% 录用，档次随声望）；主动投稿则按下列基础成功率，并受履历加成（见第 10 节）。</p>
+<table>
+  <tr><th>档次</th><th class="num">写作时间</th><th class="num">基础成功率</th><th class="num">积分</th><th class="num">稿酬</th><th class="num">解锁岗</th></tr>
+  <tr><td>普通期刊 regular</td><td class="num">10 h</td><td class="num">75%</td><td class="num">1</td><td class="num">500</td><td class="num">10</td></tr>
+  <tr><td>核心期刊 core</td><td class="num">20 h</td><td class="num">45%</td><td class="num">3</td><td class="num">2,000</td><td class="num">10</td></tr>
+  <tr><td>三区 SCI</td><td class="num">30 h</td><td class="num">32%</td><td class="num">5</td><td class="num">5,000</td><td class="num">7</td></tr>
+  <tr><td>二区 SCI</td><td class="num">40 h</td><td class="num">23%</td><td class="num">8</td><td class="num">9,000</td><td class="num">6</td></tr>
+  <tr><td>一区 TOP</td><td class="num">60 h</td><td class="num">15%</td><td class="num">12</td><td class="num">15,000</td><td class="num">5</td></tr>
+  <tr><td>大子刊（小）sub2</td><td class="num">80 h</td><td class="num">8%</td><td class="num">20</td><td class="num">30,000</td><td class="num">4</td></tr>
+  <tr><td>大子刊（大）sub1</td><td class="num">100 h</td><td class="num">4%</td><td class="num">32</td><td class="num">60,000</td><td class="num">3</td></tr>
+  <tr><td>CNS</td><td class="num">150 h</td><td class="num">1.5%</td><td class="num">60</td><td class="num">200,000</td><td class="num">2</td></tr>
+</table>
+<div class="note">奇遇：<b>邀稿</b>会使本次投稿命中率 +80%；<b>大组合作邀约</b>可提升成功率；推荐信道具每封 +35%。</div>
+
+<!-- 6 纵向 -->
+<h2 id="vfund">6 · 纵向基金 6 档 <span class="en">Vertical Grants</span></h2>
+<p class="lead">纵向项目只能在<b>第一季度申报、第三季度出结果</b>。立项当年拨 50%，之后每年初拨 25%。在研限项：中级及以下 1 项，高级 2 项（人才帽子也占名额）。</p>
+<table>
+  <tr><th>档次</th><th class="num">经费</th><th class="num">年限</th><th class="num">基础成功率</th><th class="num">填报时间</th><th class="num">解锁岗</th></tr>
+  <tr><td>校级 school</td><td class="num">5 万</td><td class="num">1 年</td><td class="num">60%</td><td class="num">60 h</td><td class="num">7</td></tr>
+  <tr><td>市级 city</td><td class="num">12 万</td><td class="num">2 年</td><td class="num">25%</td><td class="num">60 h</td><td class="num">7</td></tr>
+  <tr><td>省级 prov</td><td class="num">20 万</td><td class="num">3 年</td><td class="num">20%</td><td class="num">60 h</td><td class="num">6</td></tr>
+  <tr><td>面上 general</td><td class="num">60 万</td><td class="num">4 年</td><td class="num">10%</td><td class="num">60 h</td><td class="num">5</td></tr>
+  <tr><td>重大 key</td><td class="num">200 万</td><td class="num">5 年</td><td class="num">16.5%</td><td class="num">70 h</td><td class="num">4</td></tr>
+  <tr><td>重大（顶级）major</td><td class="num">550 万</td><td class="num">5 年</td><td class="num">8%</td><td class="num">80 h</td><td class="num">2</td></tr>
+</table>
+<div class="note">青年基金 30 万（3 年）每人只能获得一次；面上、重大均按国家基金委限项规则。</div>
+
+<!-- 7 人才 -->
+<h2 id="talent">7 · 人才项目 3 档 <span class="en">Talent Titles</span></h2>
+<p class="lead">人才项目每人<b>只能获得一次</b>，同样占在研名额。</p>
+<table>
+  <tr><th>头衔</th><th class="num">年龄上限</th><th class="num">经费</th><th class="num">年限</th><th class="num">成功率</th><th class="num">填报</th><th class="num">解锁岗</th></tr>
+  <tr><td>蓝海计划 blue</td><td class="num">35 岁</td><td class="num">30 万</td><td class="num">3 年</td><td class="num">40%</td><td class="num">50 h</td><td class="num">6</td></tr>
+  <tr><td>优青 youqing</td><td class="num">38 岁</td><td class="num">200 万</td><td class="num">3 年</td><td class="num">8%</td><td class="num">80 h</td><td class="num">4</td></tr>
+  <tr><td>杰青 jieqing</td><td class="num">45 岁</td><td class="num">400 万</td><td class="num">5 年</td><td class="num">7.3%</td><td class="num">120 h</td><td class="num">1</td></tr>
+</table>
+
+<!-- 8 横向 -->
+<h2 id="horizontal">8 · 横向经费与工作量 <span class="en">Horizontal Contracts</span></h2>
+<div class="grid2">
+<div class="card">
+  <h3 style="margin-top:0">谈单与到账</h3>
+  <ul class="tight">
+    <li>横向可在<b>任何季度填报，立即出结果</b>。</li>
+    <li>每块（10h）谈单基础成功率 40%，老板道具 +45%。</li>
+    <li>每单金额随岗位提升：十级 3–8 万，五级 10–22 万，一级 16–32 万。</li>
+    <li>横向考核基准：讲师 10 万 / 副教授 20 万 / 教授 40 万。</li>
+  </ul>
+</div>
+<div class="card">
+  <h3 style="margin-top:0">到账后的工作量</h3>
+  <ul class="tight">
+    <li>每季度需完成横向工作量：<code>到账经费(万) × 2 小时</code>。</li>
+    <li>完不成按缺口 500 元/小时从其他经费抵扣。</li>
+    <li>抵扣不了即<b>横向违约，直接解聘</b>。</li>
+    <li>团队/老板道具可放大到账金额（×1.3 / ×1.6）。</li>
+  </ul>
+</div>
+</div>
+
+<!-- 9 研究生 -->
+<h2 id="student">9 · 研究生与论文产出 <span class="en">Graduate Students</span></h2>
+<table>
+  <tr><th>类型</th><th class="num">津贴（月）</th><th class="num">年末发论文概率</th><th>论文档次分布</th></tr>
+  <tr><td>硕士研究生</td><td class="num">1,000 元</td><td class="num">30%</td><td>以 3 区为中心正态分布（σ≈1.0）</td></tr>
+  <tr><td>博士研究生</td><td class="num">3,000 元</td><td class="num">50%</td><td>以 3 区为中心正态分布（σ≈1.2）</td></tr>
+</table>
+<ul class="tight">
+  <li>指导投入可提升档次：指导 ≥50h 均值 +0.7 档，≥80h 均值 +1.5 档。</li>
+  <li>津贴从项目经费支付；<b>经费发不出工资，学生第二年离开且第二年不能招生</b>。</li>
+  <li>讲师（部分岗位）不能招收研究生，名额随岗位增加（十级 0 → 一级 6）。</li>
+</ul>
+
+<!-- 10 加成 -->
+<h2 id="buff">10 · 加成公式总览 <span class="en">Bonus Formulas</span></h2>
+<h3>履历加成 trackRecordBonus（用于项目与论文）</h3>
+<div class="formula">
+论文积分: min(0.20, lifePapers / 1500)<br>
+CNS:　　 min(0.10, lifeCns × 0.04)<br>
+一区:　　 min(0.08, lifeQ1 × 0.012)<br>
+人才数:　 min(0.08, 人才头衔数 × 0.04)<br>
+重大项目: min(0.05, lifeVtop × 0.02)<br>
+<b>合计上限约 0.51</b>
+</div>
+<h3>论文投稿成功率</h3>
+<div class="formula">
+子刊/大子刊: + min(lifeCns×0.05, 0.15)<br>
+一区档:　　　 + min(lifeQ1×0.015, 0.10)<br>
+普通档:　　　 + min(lifeSci×0.01, 0.08)<br>
++ 履历加成 × 0.5　+ 邀稿 0.8　+ 推荐信 ×0.35<br>
+健康&lt;30 时 ×0.7　最终上限 0.97
+</div>
+<h3>项目（纵向 / 人才）成功率</h3>
+<div class="formula">
+= 基础率 + 履历加成 + min(0.05, 在研数 × 0.01) + 进修加成<br>
+若无论文(lifePapers≤0) ×0.5　最终上限 0.95
+</div>
+
+<!-- 11 道具 -->
+<h2 id="item">11 · 道具商店 <span class="en">Items</span></h2>
+<p class="lead">研究生劳务、一般道具走<b>项目经费</b>；个人道具走<b>个人工资</b>。价格已在基础上提高 5 倍。</p>
+<table>
+  <tr><th>道具</th><th class="num">价格</th><th>支付池</th><th>效果</th></tr>
+  <tr><td>AI 写作 ai</td><td class="num">2,500</td><td>项目</td><td>本月写作/备课效率提升</td></tr>
+  <tr><td>好学生 star</td><td class="num">4,500</td><td>项目</td><td>本月产出提升</td></tr>
+  <tr><td>咖啡 coffee</td><td class="num">750</td><td>个人</td><td>季度 +30h/月，但健康 −6</td></tr>
+  <tr><td>推荐信 rec</td><td class="num">3,000</td><td>项目</td><td>下次投稿 +35%</td></tr>
+  <tr><td>健身卡 gym</td><td class="num">1,250</td><td>个人</td><td>立即恢复 35% 健康</td></tr>
+  <tr><td>行政秘书 sec</td><td class="num">2,250</td><td>项目</td><td>清空行政事务并转社会服务</td></tr>
+  <tr><td>老板关系 boss</td><td class="num">4,000</td><td>项目</td><td>横向谈单 +45%、金额 ×1.3</td></tr>
+  <tr><td>模板 tpl</td><td class="num">3,000</td><td>项目</td><td>申报材料效率提升</td></tr>
+  <tr><td>硕士名额 master</td><td class="num">3,000</td><td>项目</td><td>增加 1 个招生名额</td></tr>
+  <tr><td>护盾 shield</td><td class="num">1,750</td><td>个人</td><td>抵消一次考核降级/扣减</td></tr>
+  <tr><td>团队协作 team</td><td class="num">6,000</td><td>项目</td><td>产出 ×1.6</td></tr>
+</table>
+
+<!-- 12 行政职务 -->
+<h2 id="position">12 · 行政职务与团队 <span class="en">Positions & Team</span></h2>
+<p class="lead">获得行政职务后可招募随机教师分担工作，<b>招募教师完成的事情你获得 60% 收益分成</b>。职务越高可招募人数越多。</p>
+<table>
+  <tr><th>职务</th><th class="num">可招募</th><th class="num">月职务津贴</th><th class="num">需声望</th></tr>
+  <tr><td>无</td><td class="num">0</td><td class="num">—</td><td class="num">—</td></tr>
+  <tr><td>系主任</td><td class="num">1</td><td class="num">1,000</td><td class="num">10</td></tr>
+  <tr><td>副院长</td><td class="num">2</td><td class="num">2,500</td><td class="num">30</td></tr>
+  <tr><td>院长</td><td class="num">4</td><td class="num">4,500</td><td class="num">60</td></tr>
+  <tr><td>副校长</td><td class="num">6</td><td class="num">8,000</td><td class="num">90</td></tr>
+  <tr><td>校长</td><td class="num">9</td><td class="num">15,000</td><td class="num">140</td></tr>
+</table>
+<h3>招募教师等级</h3>
+<table>
+  <tr><th>等级</th><th class="num">能力系数</th><th class="num">月工资</th><th class="num">引进费</th><th class="num">出现权重</th></tr>
+  <tr><td>普通 norm</td><td class="num">0.7</td><td class="num">3,500</td><td class="num">3,000</td><td class="num">62%</td></tr>
+  <tr><td>骨干 backbone</td><td class="num">1.1</td><td class="num">7,000</td><td class="num">10,000</td><td class="num">29%</td></tr>
+  <tr><td>明星 star</td><td class="num">1.8</td><td class="num">15,000</td><td class="num">30,000</td><td class="num">9%</td></tr>
+</table>
+
+<!-- 13 其他 -->
+<h2 id="misc">13 · 进修 / 教材 / 教改 / 专利 <span class="en">Training, Textbooks, Reforms, Patents</span></h2>
+<table>
+  <tr><th>系统</th><th>档位与数值</th></tr>
+  <tr><td>进修</td><td>师资培训班（20h/2000 元，申请率 +10%，6 个月）；访问学者（40h/8000，+20%，12 个月）；学位提升（80h/20000，提升学历）</td></tr>
+  <tr><td>教材</td><td>普通教材（150h，成功率 92%，评价 +12、育人 +12）；规划教材（220h，70%，评价 +22、育人 +20）</td></tr>
+  <tr><td>教改</td><td>校级（30h/80%，2 万，2 年）；省级（30h/52%，6 万，3 年）；国家级（40h/27%，16 万，4 年）</td></tr>
+  <tr><td>专利</td><td>固定为<b>实用新型</b>（20h，成功率 65%，积分 1）；另有发明专利档（40h，50%，积分 3）</td></tr>
+</table>
+
+<!-- 14 院校出身 -->
+<h2 id="origin">14 · 院校与出身随机 <span class="en">Schools & Origins</span></h2>
+<p class="lead">开局随机（也可自定义）出生年龄、毕业院校、已有成果、现任职称与单位。单位越差考核越低，单位越好考核要求越高。</p>
+<table>
+  <tr><th>院校层次</th><th class="num">KPI 系数</th><th class="num">经费系数</th><th class="num">工资系数</th><th class="num">申请系数</th></tr>
+  <tr><td>中专 / 职业院校</td><td class="num">0.65</td><td class="num">0.6</td><td class="num">0.2</td><td class="num">0.80</td></tr>
+  <tr><td>大专</td><td class="num">0.75</td><td class="num">0.7</td><td class="num">0.4</td><td class="num">0.85</td></tr>
+  <tr><td>民办本科</td><td class="num">0.85</td><td class="num">0.8</td><td class="num">0.6</td><td class="num">0.90</td></tr>
+  <tr><td>普通本科</td><td class="num">0.95</td><td class="num">0.95</td><td class="num">0.8</td><td class="num">0.95</td></tr>
+  <tr><td>重点本科</td><td class="num">1.00</td><td class="num">1.0</td><td class="num">1.0</td><td class="num">1.00</td></tr>
+  <tr><td>211</td><td class="num">1.10</td><td class="num">1.2</td><td class="num">1.2</td><td class="num">1.08</td></tr>
+  <tr><td>985</td><td class="num">1.20</td><td class="num">1.4</td><td class="num">1.4</td><td class="num">1.15</td></tr>
+  <tr><td>顶级 985（C9）</td><td class="num">1.30</td><td class="num">1.6</td><td class="num">1.6</td><td class="num">1.20</td></tr>
+  <tr><td>世界 Top 院校</td><td class="num">1.40</td><td class="num">2.0</td><td class="num">1.8</td><td class="num">1.25</td></tr>
+</table>
+<h3>难度系数</h3>
+<table>
+  <tr><th>难度</th><th class="num">KPI 系数</th><th class="num">时间系数</th><th class="num">随机事件率</th><th class="num">初始资金</th></tr>
+  <tr><td>简单 easy</td><td class="num">0.68</td><td class="num">1.15</td><td class="num">0.48</td><td class="num">2,400</td></tr>
+  <tr><td>中等 normal</td><td class="num">1.139</td><td class="num">1.00</td><td class="num">0.60</td><td class="num">2,000</td></tr>
+  <tr><td>困难 hard</td><td class="num">1.14</td><td class="num">0.90</td><td class="num">0.72</td><td class="num">1,600</td></tr>
+</table>
+<div class="note">毕业学历从大专到国际 Top 共 5 档，申请系数 1.0–1.25、初始声望 0–25。所有项目、教改成功率都与已有论文、荣誉、院校相关，在基础率上浮动。</div>
+
+<!-- 15 院士 -->
+<h2 id="acad">15 · 院士评定公式 <span class="en">Academician Selection</span></h2>
+<p class="lead">院士竞争力<b>不设上限、不卡年龄</b>。需先成为一级教授并任职满 3 年，才会出现「申请院士」选项。</p>
+<div class="formula">
+<b>院士竞争力 score</b> =<br>
+　lifeCns × 15<br>
++ lifeQ1 × 0.7<br>
++ log10(lifePapers + 1) × 6<br>
++ lifeVtop（重大项目）× 5<br>
++ 人才头衔（杰青 18 / 优青 10 / 蓝海 4）<br>
++ fame × 0.03<br>
++ 出身（phd × 0.9 + sch × 0.8 + ach × 0.9）<br><br>
+<b>当选概率</b> = min(1, score × 每分概率)<br>
+每分概率：简单 0.00005 / 中等 0.00001 / 困难 0.000005
+</div>
+<div class="note">成功当选院士即游戏胜利。可在结局页使用「分享结局」生成结局图片与文案，分享到小红书/朋友圈。</div>
+
+<footer>
+  《青椒进化论 Faculty Evolution》 · 游戏说明书与数值公式<br>
+  本说明书中的数值为当前版本（build 6）实际采用的概率与加成，随机事件会使每局体验不同。
+</footer>
+
+</div>
+</body>
+</html>
