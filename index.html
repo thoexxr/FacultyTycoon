@@ -22,6 +22,7 @@
   .grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 14px; }
   .feat { background:#f3ead3; border-radius: 12px; padding: 14px 16px; }
   .feat b { color:#5a3d2b; }
+  .shots img { width:100%; border-radius:12px; box-shadow:0 2px 10px rgba(120,90,40,.18); }
   .links { display:flex; gap: 14px; flex-wrap: wrap; margin-top: 8px; }
   .btn { display:inline-block; padding: 12px 22px; border-radius: 10px; text-decoration:none; font-weight:600; }
   .btn-pri { background:#3f5c3a; color:#fff; }
@@ -55,10 +56,20 @@
   </div>
 
   <div class="card">
+    <h2>游戏画面</h2>
+    <div class="grid shots">
+      <img src="faculty-shot1.jpg" alt="开始页">
+      <img src="faculty-shot2.jpg" alt="游戏主界面">
+      <img src="faculty-shot3.jpg" alt="一级教授与院士申请">
+    </div>
+  </div>
+
+  <div class="card">
     <h2>隐私与支持</h2>
     <p>本游戏完全离线，不收集任何数据、不申请任何设备权限。</p>
     <div class="links">
-      <a class="btn btn-pri" href="privacy.html">隐私政策 Privacy</a>
+      <a class="btn btn-pri" href="https://apps.apple.com/us/app/%E5%A4%A7%E5%AD%A6%E9%9D%92%E6%A4%92%E6%99%8B%E5%8D%87%E4%B9%8B%E8%B7%AF/id6825444856" target="_blank" rel="noopener">在 App Store 下载</a>
+      <a class="btn btn-sec" href="privacy.html">隐私政策 Privacy</a>
       <a class="btn btn-sec" href="support.html">技术支持 Support</a>
     </div>
   </div>
